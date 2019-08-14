@@ -54,7 +54,6 @@ updateTime();
 const server = new ApolloServer({
     introspection: Meteor.isDevelopment,
     debug: Meteor.isDevelopment,
-    path: "/graphql",
     formatError: e => ({
         message: e.message,
         locations: e.locations,
@@ -65,7 +64,7 @@ const server = new ApolloServer({
 });
 
 server.applyMiddleware({
-    app: WebApp.connectHandlers,
+    app: <any>WebApp.connectHandlers,
 });
 
 server.installSubscriptionHandlers(WebApp.httpServer);

@@ -1,0 +1,53 @@
+{
+    "name": "meteor-test-project",
+    "private": true,
+    "scripts": {
+        "start": "meteor run",
+        "test": "meteor test --once --driver-package meteortesting:mocha",
+        "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+        "visualize": "meteor --production --extra-packages bundle-visualizer"
+    },
+    "dependencies": {
+        "@babel/runtime": "^7.5.5",
+        "@types/meteor": "^1.4.29",
+        "@types/mocha": "^5.2.7",
+        "@types/react": "^16.9.1",
+        "@types/react-dom": "^16.8.5",
+        "apollo-cache-inmemory": "^1.6.3",
+        "apollo-client": "^2.6.4",
+        "apollo-link": "^1.2.12",
+        "apollo-link-http": "^1.5.15",
+        "apollo-link-ws": "^1.0.18",
+        "apollo-live-client": "^0.2.1",
+        "apollo-live-server": "^0.2.2",
+        "apollo-morpher": "^0.2.0",
+        "apollo-server-express": "^2.8.1",
+        "apollo-upload-client": "^11.0.0",
+        "graphql": "^14.4.2",
+        "graphql-load": "^0.1.1",
+        "graphql-tools": "^4.0.5",
+        "graphql-type-json": "^0.3.0",
+        "meteor-node-stubs": "^1.0.0",
+        "react": "^16.5.0",
+        "react-apollo": "^3.0.0",
+        "react-dom": "^16.5.0",
+        "subscriptions-transport-ws": "^0.9.16",
+        "uuid": "^3.3.2"
+    },
+    "meteor": {
+        "mainModule": {
+            "client": "client/main.tsx",
+            "server": "server/main.ts"
+        },
+        "testModule": "tests/main.ts"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^2.0.0",
+        "@typescript-eslint/parser": "^2.0.0",
+        "eslint": "^6.1.0",
+        "eslint-config-prettier": "^6.0.0",
+        "eslint-plugin-prettier": "^3.1.0",
+        "eslint-plugin-react": "^7.14.3",
+        "prettier": "^1.18.2"
+    }
+}

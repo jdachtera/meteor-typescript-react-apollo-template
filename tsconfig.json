@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "esModuleInterop": true,
+        "jsx": "react",
+        "paths": {
+            "/imports/*": ["imports/*"]
+        },
+        "resolveJsonModule": true
+    }
+}

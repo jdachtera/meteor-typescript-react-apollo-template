@@ -10,6 +10,7 @@ standard-minifier-js@2.4.1    # JS minifier run for production mode
 ecmascript@0.13.0-beta182.17              # Enable ECMAScript2015+ syntax in app code
 typescript              # Enable TypeScript syntax in .ts and .tsx modules
 shell-server@0.4.0            # Server-side component of the `meteor shell` command
+mongo@1.6.0                   # The database Meteor supports right now
 
 static-html             # Define static page content in .html files
 meteor

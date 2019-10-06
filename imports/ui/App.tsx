@@ -1,5 +1,5 @@
 import React from "react";
-import { ApolloProvider } from "react-apollo";
+import { ApolloProvider } from "@apollo/react-hooks";
 
 import { HttpLink } from "apollo-link-http";
 import { WebSocketLink } from "apollo-link-ws";
@@ -8,11 +8,29 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 
 import Hello from "./Hello";
 import Info from "./Info";
-import { split } from "apollo-link";
+import { split, ApolloLink } from "apollo-link";
 import { getMainDefinition } from "apollo-utilities";
+import { Login } from "./Login";
+import { Protected } from "./Protected";
+import { TodosList } from "./TodosList";
+
+const authLink = new ApolloLink((operation, forward) => {
+    // Retrieve the authorization token from local storage.
+    const token = localStorage.getItem("access_token");
+
+    // Use the setContext method to set the HTTP headers.
+    operation.setContext({
+        headers: {
+            authorization: token ? `Bearer ${token}` : "",
+        },
+    });
+
+    // Call the next link in the middleware chain.
+    return forward(operation);
+});
 
 // Create an http link:
-const httpLink = new HttpLink();
+const httpLink = authLink.concat(new HttpLink());
 
 const wsLink = new WebSocketLink({
     uri: `${window.location.origin}/graphql`.replace(/^http/, "ws"),
@@ -42,9 +60,8 @@ const App = () => (
     <ApolloProvider client={apolloClient}>
         <div>
             <h1>Welcome to Meteor!</h1>
-            <Hello />
-            <Info />
         </div>
+        <Protected component={TodosList} />
     </ApolloProvider>
 );
 

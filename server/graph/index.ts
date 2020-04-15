@@ -1,45 +1,97 @@
 import { load } from "graphql-load";
 import { PubSub } from "apollo-server-express";
 import gql from "graphql-tag";
+import { v4 } from "uuid";
 
 const pubsub = new PubSub();
-const CURRENT_TIME = "CURRENT_TIME";
+const USERS = "USERS";
 
-let updateInterval = 1000;
+let users = {};
 
 function updateTime() {
-    pubsub.publish(CURRENT_TIME, new Date().toISOString());
-    setTimeout(updateTime, updateInterval);
+    pubsub.publish(USERS, getUsers());
+
+    setTimeout(updateTime, 1000);
 }
 
-updateTime();
+export const upsertUser = user => {
+    if (JSON.stringify(user) !== JSON.stringify(users[user.id])) {
+        users = {
+            ...users,
+            [user.id]: {
+                id: null,
+                position: {
+                    x: 0.5,
+                    y: 0.5,
+                },
+                ...users[user.id],
+                ...user,
+            },
+        };
+        pubsub.publish(USERS, getUsers());
+    }
+    return user;
+};
+
+const getUsers = () => {
+    return Object.values(users).filter(user => user.id && user.isOnline);
+};
+//updateTime();
+
+const getCurrentUser = context => {
+    return users[context.userId] || { id: null, x: 0.5, y: 0.5 };
+};
 
 load({
     typeDefs: gql`
         type Query {
-            sayHello(name: String!): String
+            isAuthenticated: Boolean!
+            currentUser: User!
         }
 
         type Subscription {
-            currentTime: String!
+            users: [User!]!
         }
 
         type Mutation {
-            setUpdateIntervalTime(timeInMs: Int!): Boolean
+            createUser: User!
+            move(x: Float!, y: Float!): User!
+        }
+
+        type Position {
+            x: Float!
+            y: Float!
+        }
+
+        type User {
+            id: String
+            name: String!
+            position: Position
         }
     `,
     resolvers: {
         Query: {
-            sayHello: (root, { name }) => `Hello ${name}`,
+            isAuthenticated: (root, args, context) => !!context.userId,
+            currentUser: (root, args, context) => getCurrentUser(context),
         },
         Mutation: {
-            setUpdateIntervalTime(root, { timeInMs }) {
-                updateInterval = timeInMs;
-            },
+            createUser: () =>
+                upsertUser({
+                    id: v4(),
+                    name: "",
+                }),
+            move: (root, args, context) =>
+                upsertUser({
+                    id: context.userId,
+                    position: {
+                        x: args.x,
+                        y: args.y,
+                    },
+                }),
         },
         Subscription: {
-            currentTime: {
-                subscribe: () => pubsub.asyncIterator(CURRENT_TIME),
+            users: {
+                subscribe: () => pubsub.asyncIterator(USERS),
                 resolve: payload => payload,
             },
         },

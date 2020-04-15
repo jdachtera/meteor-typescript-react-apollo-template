@@ -1,52 +1,23 @@
-import React, { Component, useState } from "react";
-import { useQuery, useSubscription, useMutation } from "react-apollo";
-import gql from "graphql-tag";
+import React from "react";
+
+import { AvatarArea } from "./AvatarArea";
+import { StreamVideos } from "./StreamVideos";
+import { usePosition } from "./usePosition";
+import { useUsers } from "./useUsers";
+import { useRtcRoom } from "./useRtcRoom";
 
 export default function Hello() {
-    const [name, setName] = useState("world");
+  const { x, y } = usePosition();
 
-    const { data: { sayHello = "" } = {} } = useQuery(
-        gql`
-            query SayHelloQuery($name: String!) {
-                sayHello(name: $name)
-            }
-        `,
-        { variables: { name } },
-    );
+  const { users, currentUser } = useUsers();
 
-    const { data: { currentTime = "" } = {} } = useSubscription(gql`
-        subscription CurrentTime {
-            currentTime
-        }
-    `);
+  const peers = useRtcRoom(currentUser && currentUser.id, "playa");
 
-    const [setUpdateIntervalTimeMutation] = useMutation(gql`
-        mutation SetUpdateIntervalTime($timeInMs: Int!) {
-            setUpdateIntervalTime(timeInMs: $timeInMs)
-        }
-    `);
-
-    return (
-        <div>
-            <h1>{sayHello}</h1>
-
-            <input value={name} onChange={e => setName(e.target.value)} />
-
-            <div>The current time is: {currentTime}</div>
-
-            <div>
-                Update interval:
-                <input
-                    type="range"
-                    min="50"
-                    max="2000"
-                    onChange={e =>
-                        setUpdateIntervalTimeMutation({
-                            variables: { timeInMs: parseInt(e.target.value, 10) },
-                        })
-                    }
-                />
-            </div>
-        </div>
-    );
+  return (
+    <div>
+      <AvatarArea x={x} y={y} peers={peers} />
+    </div>
+  );
 }
+
+//<StreamVideos x={x} y={y} peers={peers} users={users} />

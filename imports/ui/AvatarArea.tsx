@@ -57,7 +57,7 @@ export const AvatarArea = React.memo(
           overflow: "hidden",
           width: "100%",
           height: "100%",
-          backgroundImage: "url(https://picsum.photos/1280/800)",
+          backgroundImage: "url(https://picsum.photos/id/625/1280/800)",
           backgroundSize: "cover"
         }}
         ref={areaRef}
@@ -143,7 +143,9 @@ const Avatar = ({
         overflow: "hidden",
         left: `${position.x * (dimensions.x - size) + avatarRadius}px`,
         top: `${position.y * (dimensions.y - size) + avatarRadius}px`,
-        backgroundImage: `url(https://api.adorable.io/avatars/${maxSize}/${id}.png)`,
+        backgroundImage: `url(https://api.adorable.io/avatars/${Math.round(
+          maxSize
+        )}/${id}.png)`,
         backgroundSize: "cover",
         width: `${size}px`,
         height: `${size}px`,
@@ -152,6 +154,8 @@ const Avatar = ({
         borderRadius: `${size}px`,
         flexDirection: "column",
         alignItems: "center",
+        boxShadow: `rgba(0,0,0,0.8) 0 0 ${size/20}px`,
+        boxShadowRadius: `${size}px`
         ...style
       }}
     >

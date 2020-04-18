@@ -12,7 +12,7 @@ export const useRtcRoom = (userId, room) => {
     if (userId && localStream) {
       let peers = [];
       const url = new URL(location.origin);
-      url.port = (parseInt(url.port) + 1).toString();
+      url.port = url.port ? (parseInt(url.port) + 1).toString() : "";
       url.pathname = "switchboard.rtc.io/";
       const connection = quickconnect(url.toString(), { room });
 

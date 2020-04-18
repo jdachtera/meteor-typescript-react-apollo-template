@@ -1,5 +1,7 @@
 import quickconnect from "rtc-quickconnect";
 import { useState, useEffect } from "react";
+import freeice from "freeice";
+
 import { useLocalStream } from "./useLocalStream";
 import { Peer } from "./types";
 
@@ -14,7 +16,10 @@ export const useRtcRoom = (userId, room) => {
       const url = new URL(location.origin);
       url.port = url.port ? (parseInt(url.port) + 1).toString() : "";
       url.pathname = "switchboard.rtc.io/";
-      const connection = quickconnect(url.toString(), { room });
+      const connection = quickconnect(url.toString(), {
+        room,
+        iceServers: freeice()
+      });
 
       connection.profile({ userId });
 

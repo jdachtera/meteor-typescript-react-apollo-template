@@ -21,7 +21,7 @@
         "apollo-live-client": "^0.2.1",
         "apollo-live-server": "^0.2.2",
         "apollo-morpher": "^0.2.0",
-        "apollo-server-express": "^2.8.1",
+        "apollo-server-express": "^2.14.2",
         "apollo-upload-client": "^11.0.0",
         "graphql": "^14.4.2",
         "graphql-load": "^0.1.1",
